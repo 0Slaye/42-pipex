@@ -6,20 +6,20 @@
 /*   By: uwywijas <uwywijas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 18:46:50 by uwywijas          #+#    #+#             */
-/*   Updated: 2024/01/23 21:11:23 by uwywijas         ###   ########.fr       */
+/*   Updated: 2024/01/23 22:17:24 by uwywijas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "commons.h"
 #include "imports.h"
 
-void	exec(char **argv, int input_fd, int result_fd, int n)
+void	exec(char **argv, int input_fd, int output_fd, int n)
 {
 	char	**split;
 	char	*holder;
 
 	dup2(input_fd, STDIN_FILENO);
-	dup2(result_fd, STDOUT_FILENO);
+	dup2(output_fd, STDOUT_FILENO);
 	split = ft_split(argv[n], ' ');
 	if (split == NULL)
 		return (ft_putstr_fd("split: An error occured\n", 2));
@@ -33,12 +33,14 @@ void	exec(char **argv, int input_fd, int result_fd, int n)
 void	pipex(int argc, char **argv)
 {
 	int	pfd[2];
+	int	holder;
 	int	id;
 	int	fd;
 	int	i;
 
 	if (pipe(pfd) == -1)
 		return (perror(argv[1]));
+	holder = pfd[0];
 	i = -1;
 	while (++i != argc - 4)
 	{
@@ -53,13 +55,18 @@ void	pipex(int argc, char **argv)
 			if (i == 0)
 			{
 				close(pfd[0]);
-				pfd[0] = open(argv[1], O_RDONLY);
+				holder = open(argv[1], O_RDONLY);
 			}
 			id = fork();
 			if (id == 0)
-				exec(argv, pfd[0], pfd[1], i + 2);
+			{
+				if (i == 0)
+					exec(argv, holder, pfd[1], i + 2);
+				else
+					exec(argv, pfd[0], pfd[1], i + 2);
+			}
 			else
-				return (wait(NULL), close(pfd[0]), close(pfd[1]), (void) NULL);
+				return (wait(NULL), close(holder), close(pfd[0]), close(pfd[1]), (void) NULL);
 		}
 	}
 	fd = open(argv[argc - 1], O_CREAT | O_WRONLY, 0777);
@@ -67,5 +74,5 @@ void	pipex(int argc, char **argv)
 	if (id == 0)
 		exec(argv, pfd[0], fd, argc - 2);
 	else
-		return (wait(NULL), close(pfd[0]), close(fd), (void) NULL);
+		return (wait(NULL), close(pfd[0]), close(pfd[1]), close(fd), (void) NULL);
 }
