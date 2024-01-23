@@ -6,6 +6,7 @@ CFLAGS = -Wall -Werror -Wextra
 #Files variables
 LIBFT = sources/libft
 SRCS_FILES =	main.c \
+				pipex.c \
 				utils.c
 SRCS = $(addprefix sources/, $(SRCS_FILES))
 OBJS = $(SRCS:.c=.o)
