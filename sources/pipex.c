@@ -32,47 +32,38 @@ void	exec(char **argv, int input_fd, int output_fd, int n)
 
 void	pipex(int argc, char **argv)
 {
-	int	pfd[2];
-	int	holder;
+	int	fd[2];
+	int	prev;
+	int	hfd;
 	int	id;
-	int	fd;
 	int	i;
 
-	if (pipe(pfd) == -1)
-		return (perror(argv[1]));
-	holder = pfd[0];
 	i = -1;
+	if (i == -1 && pipe(fd) == -1)
+		return (perror(argv[1]));
 	while (++i != argc - 4)
 	{
+		prev = fd[0];
+		if (i != 0 && pipe(fd) == -1)
+			return (perror(argv[1]));
 		id = fork();
 		if (id != 0)
 		{
-			close(pfd[1]);
+			close(fd[1]);
 			wait(NULL);
 		}
 		else
 		{
 			if (i == 0)
 			{
-				close(pfd[0]);
-				holder = open(argv[1], O_RDONLY);
-			}
-			id = fork();
-			if (id == 0)
-			{
-				if (i == 0)
-					exec(argv, holder, pfd[1], i + 2);
-				else
-					exec(argv, pfd[0], pfd[1], i + 2);
+				close(fd[0]);
+				hfd = open(argv[1], O_RDONLY);
+				exec(argv, hfd, fd[1], i + 2);
 			}
 			else
-				return (wait(NULL), close(holder), close(pfd[0]), close(pfd[1]), (void) NULL);
+				exec(argv, prev, fd[1], i + 2);
 		}
 	}
-	fd = open(argv[argc - 1], O_CREAT | O_WRONLY, 0777);
-	id = fork();
-	if (id == 0)
-		exec(argv, pfd[0], fd, argc - 2);
-	else
-		return (wait(NULL), close(pfd[0]), close(pfd[1]), close(fd), (void) NULL);
+	hfd = open(argv[argc - 1], O_CREAT | O_WRONLY, 0777);
+	exec(argv, fd[0], hfd, argc - 2);
 }
