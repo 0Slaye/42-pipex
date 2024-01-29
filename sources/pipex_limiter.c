@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex.c                                            :+:      :+:    :+:   */
+/*   pipex_limiter.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: uwywijas <uwywijas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 18:46:50 by uwywijas          #+#    #+#             */
-/*   Updated: 2024/01/29 17:30:06 by uwywijas         ###   ########.fr       */
+/*   Updated: 2024/01/29 17:52:55 by uwywijas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,17 +43,19 @@ void	childing(int *fd, int i, char **argv, int *hfd)
 {
 	close(fd[0]);
 	if (i == 0)
-		exec(argv, hfd[1], fd[1], i + 2);
+	{
+		exec(argv, hfd[1], fd[1], i + 3);
+	}
 	else
-		exec(argv, hfd[0], fd[1], i + 2);
+		exec(argv, hfd[0], fd[1], i + 3);
 }
 
 void	last_cmd(int hfd, char **argv, int *fd, int argc)
 {
-	hfd = open(argv[argc - 1], O_CREAT | O_WRONLY | O_TRUNC, 0777);
+	hfd = open(argv[argc - 1], O_CREAT | O_WRONLY | O_APPEND, 0777);
 	if (hfd == -1)
 		return (perror("open"));
-	exec(argv, fd[0], hfd, argc - 2);
+	exec(argv, fd[0], hfd, argc - 3);
 	close(hfd);
 	close(fd[0]);
 	close(fd[1]);
@@ -69,7 +71,7 @@ void	pipex(int argc, char **argv)
 	i = -1;
 	if (i == -1 && pipe(fd) == -1)
 		return (perror(argv[1]));
-	while (++i != argc - 4)
+	while (++i != argc - 5)
 	{
 		hfd[0] = fd[0];
 		if (i != 0 && pipe(fd) == -1)

@@ -1,8 +1,0 @@
-6
-
-an :
-	@make clean -C $(LIBFT) --no-print-directory
-fclean : clean
-	@make fclean -C $(LIBFT) --no-print-directory
-re : fclean all
-.PHONY : all clean fclean re display
