@@ -1,7 +1,7 @@
 #Program variables
 NAME = pipex
 CC = cc
-CFLAGS = -Wall -Werror -Wextra
+CFLAGS = -Wall -Werror -Wextra -g3
 
 #Files variables
 LIBFT = sources/libft

@@ -6,14 +6,14 @@
 /*   By: uwywijas <uwywijas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/22 15:41:22 by uwywijas          #+#    #+#             */
-/*   Updated: 2024/01/23 19:18:54 by uwywijas         ###   ########.fr       */
+/*   Updated: 2024/01/29 14:46:37 by uwywijas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "commons.h"
 #include "imports.h"
 
-int main(int argc, char **argv)
+int	main(int argc, char **argv)
 {
 	pipex(argc, argv);
 	return (0);

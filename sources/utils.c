@@ -6,7 +6,7 @@
 /*   By: uwywijas <uwywijas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/22 15:41:22 by uwywijas          #+#    #+#             */
-/*   Updated: 2024/01/23 15:50:35 by uwywijas         ###   ########.fr       */
+/*   Updated: 2024/01/29 16:12:21 by uwywijas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,8 @@ int	split_counter(char **value)
 	int	i;
 
 	i = -1;
-	while (value[++i] != NULL);
+	while (value[i] != NULL)
+		i++;
 	return (i);
 }
 
@@ -28,6 +29,6 @@ void	s_free(char **value)
 
 	i = -1;
 	while (value[++i] != NULL)
-		free(value[++i]);
+		free(value[i]);
 	free(value);
 }
