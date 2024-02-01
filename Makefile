@@ -7,7 +7,10 @@ CFLAGS = -Wall -Werror -Wextra -g3
 LIBFT = sources/libft
 SRCS_FILES =	main.c \
 				pipex.c \
-				utils.c
+				utils.c \
+				pipex_limiter.c \
+				get_next_line/get_next_line.c \
+				get_next_line/get_next_line_utils.c
 SRCS = $(addprefix sources/, $(SRCS_FILES))
 OBJS = $(SRCS:.c=.o)
 INCLS = includes/

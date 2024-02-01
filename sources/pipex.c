@@ -6,7 +6,7 @@
 /*   By: uwywijas <uwywijas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 18:46:50 by uwywijas          #+#    #+#             */
-/*   Updated: 2024/01/29 17:30:06 by uwywijas         ###   ########.fr       */
+/*   Updated: 2024/02/01 16:14:09 by uwywijas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,13 +50,21 @@ void	childing(int *fd, int i, char **argv, int *hfd)
 
 void	last_cmd(int hfd, char **argv, int *fd, int argc)
 {
-	hfd = open(argv[argc - 1], O_CREAT | O_WRONLY | O_TRUNC, 0777);
-	if (hfd == -1)
-		return (perror("open"));
-	exec(argv, fd[0], hfd, argc - 2);
-	close(hfd);
-	close(fd[0]);
-	close(fd[1]);
+	int	id;
+
+	id = fork();
+	if (id != 0)
+		wait(NULL);
+	else
+	{
+		hfd = open(argv[argc - 1], O_CREAT | O_WRONLY | O_TRUNC, 0777);
+		if (hfd == -1)
+			return (perror("open"));
+		exec(argv, fd[0], hfd, argc - 2);
+		close(hfd);
+		close(fd[0]);
+		close(fd[1]);
+	}
 }
 
 void	pipex(int argc, char **argv)
