@@ -6,7 +6,7 @@
 /*   By: uwywijas <uwywijas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 18:46:50 by uwywijas          #+#    #+#             */
-/*   Updated: 2024/02/01 16:20:08 by uwywijas         ###   ########.fr       */
+/*   Updated: 2024/02/01 18:07:37 by uwywijas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,10 +32,12 @@ void	exec2(char **argv, int input_fd, int output_fd, int n)
 	free(holder);
 }
 
-void	parenting2(int fd)
+void	parenting2(int fd, int *fds, int i)
 {
 	(void) fd;
 	close(fd);
+	if (i != 0)
+		close(fds[0]);
 	wait(NULL);
 }
 
@@ -53,7 +55,7 @@ void	childing2(int *fd, int i, char **argv, int *hfd)
 		{
 			ft_putstr_fd("here_doc> ", 1);
 			value = get_next_line(0);
-			if (ft_strlen(argv[2]) == ft_strlen(value) -1 && ft_strncmp(argv[2], value, ft_strlen(value) - 1) == 0)
+			if (ft_strlen(argv[2]) == ft_strlen(value) - 1 && ft_strncmp(argv[2], value, ft_strlen(value) - 1) == 0)
 				break;
 			write(fds[1], value, ft_strlen(value));
 			free(value);
@@ -71,15 +73,17 @@ void	last_cmd2(int hfd, char **argv, int *fd, int argc)
 
 	id = fork();
 	if (id != 0)
+	{
 		wait(NULL);
+		close(hfd);
+		close(fd[0]);
+	}
 	else
 	{
 		hfd = open(argv[argc - 1], O_CREAT | O_WRONLY | O_APPEND, 0777);
 		if (hfd == -1)
 			return (perror("open"));
 		exec2(argv, fd[0], hfd, argc - 2);
-		close(hfd);
-		close(fd[0]);
 		close(fd[1]);
 	}
 }
@@ -93,7 +97,7 @@ void	pipex_limiter(int argc, char **argv)
 
 	i = -1;
 	if (i == -1 && pipe(fd) == -1)
-		return (perror("pipe"));
+		return (perror(argv[1]));
 	while (++i != argc - 5)
 	{
 		hfd[0] = fd[0];
@@ -101,7 +105,7 @@ void	pipex_limiter(int argc, char **argv)
 			return (perror(argv[1]));
 		id = fork();
 		if (id != 0)
-			parenting2(fd[1]);
+			parenting2(fd[1], hfd, i);
 		else if (id == 0)
 			childing2(fd, i, argv, hfd);
 		else

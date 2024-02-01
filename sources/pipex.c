@@ -6,7 +6,7 @@
 /*   By: uwywijas <uwywijas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 18:46:50 by uwywijas          #+#    #+#             */
-/*   Updated: 2024/02/01 16:14:32 by uwywijas         ###   ########.fr       */
+/*   Updated: 2024/02/01 17:43:01 by uwywijas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,10 +32,13 @@ void	exec(char **argv, int input_fd, int output_fd, int n)
 	free(holder);
 }
 
-void	parenting(int fd)
+void	parenting(int fd, int *fds, int i)
 {
 	(void) fd;
 	close(fd);
+	if (i != 0)
+		close(fds[0]);
+	close(fds[1]);
 	wait(NULL);
 }
 
@@ -54,15 +57,17 @@ void	last_cmd(int hfd, char **argv, int *fd, int argc)
 
 	id = fork();
 	if (id != 0)
+	{
 		wait(NULL);
+		close(hfd);
+		close(fd[0]);
+	}
 	else
 	{
 		hfd = open(argv[argc - 1], O_CREAT | O_WRONLY | O_TRUNC, 0777);
 		if (hfd == -1)
 			return (perror("open"));
 		exec(argv, fd[0], hfd, argc - 2);
-		close(hfd);
-		close(fd[0]);
 		close(fd[1]);
 	}
 }
@@ -86,7 +91,7 @@ void	pipex(int argc, char **argv)
 			hfd[1] = open(argv[1], O_RDONLY);
 		id = fork();
 		if (id != 0)
-			parenting(fd[1]);
+			parenting(fd[1], hfd, i);
 		else if (id == 0 && hfd[1] != -1)
 			childing(fd, i, argv, hfd);
 		else
