@@ -6,7 +6,7 @@
 /*   By: uwywijas <uwywijas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 18:46:50 by uwywijas          #+#    #+#             */
-/*   Updated: 2024/02/01 16:13:19 by uwywijas         ###   ########.fr       */
+/*   Updated: 2024/02/01 16:20:08 by uwywijas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,13 +67,21 @@ void	childing2(int *fd, int i, char **argv, int *hfd)
 
 void	last_cmd2(int hfd, char **argv, int *fd, int argc)
 {
-	hfd = open(argv[argc - 1], O_CREAT | O_WRONLY | O_APPEND, 0777);
-	if (hfd == -1)
-		return (perror("open"));
-	exec2(argv, fd[0], hfd, argc - 2);
-	close(hfd);
-	close(fd[0]);
-	close(fd[1]);
+	int	id;
+
+	id = fork();
+	if (id != 0)
+		wait(NULL);
+	else
+	{
+		hfd = open(argv[argc - 1], O_CREAT | O_WRONLY | O_APPEND, 0777);
+		if (hfd == -1)
+			return (perror("open"));
+		exec2(argv, fd[0], hfd, argc - 2);
+		close(hfd);
+		close(fd[0]);
+		close(fd[1]);
+	}
 }
 
 void	pipex_limiter(int argc, char **argv)
@@ -94,7 +102,7 @@ void	pipex_limiter(int argc, char **argv)
 		id = fork();
 		if (id != 0)
 			parenting2(fd[1]);
-		else if (id == 0 && hfd[1] != -1)
+		else if (id == 0)
 			childing2(fd, i, argv, hfd);
 		else
 			return (perror("open"), exit(EXIT_FAILURE));
