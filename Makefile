@@ -24,30 +24,24 @@ BLUE= \033[1;34m
 #Commands
 all : $(NAME)
 
-libft :
-	@make bonus -C $(LIBFT) --no-print-directory
-
-$(NAME) : libft display $(OBJS)
+$(NAME) : $(OBJS)
+	@make -C $(LIBFT) --no-print-directory
 	@$(CC) $(CFLAGS) $(OBJS) -o $(NAME) $(LIBFT)/libft.a
-	@echo "$(BOLD)]$(RESET)"
+	@echo "$(BOLD)|> $(BLUE)$(NAME) compiled.$(RESET)"
 
 %.o : %.c
 	@$(CC) $(CFLAGS) -o $@ -c $< -I$(INCLS)
-	@echo -n "$(BOLD)$(BLUE)#$(RESET)"
 
 clean :
 	@make clean -C $(LIBFT) --no-print-directory
 	@rm -f $(OBJS)
-	@echo "$(BOLD)[$(NAME)]		$(GREEN)object files removed$(RESET)"
+	@echo "$(BOLD)|> $(GREEN)object files removed.$(RESET)"
 
 fclean : clean
 	@make fclean -C $(LIBFT) --no-print-directory
 	@rm -f $(NAME)
-	@echo "$(BOLD)[$(NAME)]		$(GREEN)binary file removed$(RESET)"
+	@echo "$(BOLD)|> $(GREEN)binary file removed.$(RESET)"
 
 re : fclean all
-
-display :
-	@echo -n "$(BOLD)[$(NAME)]		[$(RESET)"
 
 .PHONY : all clean fclean re display

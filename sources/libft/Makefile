@@ -56,29 +56,21 @@ BLUE= \033[1;34m
 
 all : $(NAME)
 
-$(NAME) : $(OBJ)
-	@ar cr $(NAME) $(OBJ)
-	@echo "$(BOLD)]$(RESET)"
+$(NAME) : $(OBJ) $(OBJB)
+	@ar cr $(NAME) $(OBJ) $(OBJB)
+	@echo "$(BOLD)|> $(BLUE)$(NAME) compiled.$(RESET)"
 
 %.o : %.c
 	@$(CC) $(CFLAGS) -o $@ -c $<
-	@echo -n "$(BOLD)$(BLUE)#$(RESET)"
 
 clean :
 	@rm -f $(OBJ) $(OBJB)
-	@echo "$(BOLD)[$(NAME)]	$(GREEN)object files removed$(RESET)"
+	@echo "$(BOLD)|> $(GREEN)object files removed.$(RESET)"
 
-fclean : clean
+fclean :
 	@rm -f $(NAME)
-	@echo "$(BOLD)[$(NAME)]	$(GREEN)library file removed$(RESET)"
+	@echo "$(BOLD)|> $(GREEN)library files removed.$(RESET)"
 
 re : fclean all
 
-bonus : display $(OBJ) $(OBJB)
-	@ar cr $(NAME) $(OBJ)
-	@echo "$(BOLD)]$(RESET)"
-
-display :
-	@echo -n "$(BOLD)[$(NAME)]	[$(RESET)"
-
-.PHONY : all clean fclean re bonus display
+.PHONY : all clean fclean re display
