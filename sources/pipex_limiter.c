@@ -6,7 +6,7 @@
 /*   By: uwywijas <uwywijas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 18:46:50 by uwywijas          #+#    #+#             */
-/*   Updated: 2024/02/02 16:18:36 by uwywijas         ###   ########.fr       */
+/*   Updated: 2024/02/02 18:27:46 by uwywijas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,14 +54,16 @@ void	childing2(int *fd, int i, char ***stock, int *hfd)
 		{
 			ft_putstr_fd("here_doc> ", 1);
 			value = get_next_line(0);
+			if (!value)
+				return (close(fds[1]), ft_putstr_fd("\nhere_doc: Canceled\n", \
+			2), exec2(stock, fds[0], fd[1], i + 3));
 			if (ft_strlen(stock[0][2]) == ft_strlen(value) - 1 && \
 			ft_strncmp(stock[0][2], value, ft_strlen(value) - 1) == 0)
-				break ;
+				return (free(value), close(fds[1]), \
+				exec2(stock, fds[0], fd[1], i + 3));
 			write(fds[1], value, ft_strlen(value));
 			free(value);
 		}
-		close(fds[1]);
-		exec2(stock, fds[0], fd[1], i + 3);
 	}
 	else
 		exec2(stock, hfd[0], fd[1], i + 3);
