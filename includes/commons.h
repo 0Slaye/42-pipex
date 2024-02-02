@@ -6,16 +6,17 @@
 /*   By: uwywijas <uwywijas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/22 16:33:33 by uwywijas          #+#    #+#             */
-/*   Updated: 2024/02/01 15:15:25 by uwywijas         ###   ########.fr       */
+/*   Updated: 2024/02/02 16:16:41 by uwywijas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef COMMONS_H
 # define COMMONS_H
 
-void	pipex(int argc, char **argv);
-void	pipex_limiter(int argc, char **argv);
+void	pipex(int argc, char ***stock);
+void	pipex_limiter(int argc, char ***stock);
 int		split_counter(char	**value);
 void	s_free(char **value);
+void	exec_paths(char ***stock, char **split, int i, int n);
 
 #endif
