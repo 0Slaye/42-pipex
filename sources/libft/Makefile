@@ -1,4 +1,5 @@
 NAME = libft.a
+NAMEB = libft.a
 CC = gcc
 CFLAGS = -Wall -Wextra -Werror
 SRC = 	ft_atoi.c \
@@ -74,7 +75,7 @@ fclean : clean
 re : fclean all
 
 bonus : display $(OBJ) $(OBJB)
-	@ar cr $(NAME) $(OBJ) $(OBJB)
+	@ar cr $(NAME) $(OBJ)
 	@echo "$(BOLD)]$(RESET)"
 
 display :
