@@ -6,7 +6,7 @@
 /*   By: uwywijas <uwywijas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/22 15:41:22 by uwywijas          #+#    #+#             */
-/*   Updated: 2024/02/02 16:00:18 by uwywijas         ###   ########.fr       */
+/*   Updated: 2024/02/05 15:41:11 by uwywijas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ void	s_free(char **value)
 	free(value);
 }
 
-void	exec_paths(char ***stock, char **split, int i, int n)
+void	exec_paths(char ***stock, char **split, int i)
 {
 	char	**holder;
 	char	*path;
@@ -51,6 +51,7 @@ void	exec_paths(char ***stock, char **split, int i, int n)
 		free(cmd);
 		free(path);
 	}
-	return (perror(stock[0][n]), s_free(split), \
-	s_free(holder), exit(EXIT_FAILURE));
+	ft_putstr_fd(split[0], 2);
+	ft_putstr_fd(": command not found\n", 2);
+	return (s_free(split), s_free(holder), exit(EXIT_FAILURE));
 }

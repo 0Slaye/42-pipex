@@ -6,7 +6,7 @@
 /*   By: uwywijas <uwywijas@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 18:46:50 by uwywijas          #+#    #+#             */
-/*   Updated: 2024/02/02 16:21:32 by uwywijas         ###   ########.fr       */
+/*   Updated: 2024/02/05 15:41:15 by uwywijas         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,14 +26,13 @@ void	exec(char ***stock, int input_fd, int output_fd, int n)
 	if (split == NULL)
 		return (ft_putstr_fd("split: An error occured\n", 2));
 	i = 0;
-	while (ft_strncmp(stock[1][i], "PATH", 4) != 0)
+	while (ft_strncmp(stock[1][i], "PATH=", 5) != 0)
 		i++;
-	exec_paths(stock, split, i, n);
+	exec_paths(stock, split, i);
 }
 
 void	parenting(int fd, int *fds, int i)
 {
-	(void) fd;
 	close(fd);
 	if (i != 0)
 		close(fds[0]);
@@ -63,9 +62,9 @@ void	last_cmd(int hfd, char ***stock, int *fd, int argc)
 	}
 	else
 	{
-		hfd = open(stock[0][argc - 1], O_CREAT | O_WRONLY | O_TRUNC, 0777);
+		hfd = open(stock[0][argc - 1], O_CREAT | O_WRONLY | O_TRUNC, 0644);
 		if (hfd == -1)
-			return (perror("open"));
+			return (perror(stock[0][argc - 1]));
 		exec(stock, fd[0], hfd, argc - 2);
 		close(fd[1]);
 	}
@@ -94,7 +93,7 @@ void	pipex(int argc, char ***stock)
 		else if (id == 0 && hfd[1] != -1)
 			childing(fd, i, stock, hfd);
 		else if (id == 0)
-			return (perror("open"), exit(EXIT_FAILURE));
+			return (perror(stock[0][1]), exit(EXIT_FAILURE));
 	}
 	last_cmd(hfd[0], stock, fd, argc);
 }
