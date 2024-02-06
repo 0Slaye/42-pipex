@@ -1,1 +1,1 @@
-![Badge](assets/badge.png)
+<center>![Badge](assets/badge.png)</center>
